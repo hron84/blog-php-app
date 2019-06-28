@@ -14,7 +14,7 @@
     "autoload": {
         "psr-4": {
             "Blog\\": "src/",
-            "Blog\\Test\\": "test/"
+            "Blog\\Test\\": "tests/"
         },
         "files": [
             "src/utils.php"
