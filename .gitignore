@@ -1,1 +1,3 @@
 /vendor/
+/config/application.key
+/config/*.enc*
