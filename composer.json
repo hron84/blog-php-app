@@ -15,18 +15,29 @@
         "psr-4": {
             "Blog\\": "src/",
             "Blog\\Test\\": "test/"
-        }
+        },
+        "files": [
+            "src/utils.php"
+        ]
     },
     "require": {
         "psr/log": "^1.1",
+        "php": "^7.0",
+        "ext-pdo": "*",
         "php-di/php-di": "^6.0",
         "monolog/monolog": "^1.24",
         "nikic/fast-route": "^1.3",
         "symfony/yaml": "^4.3",
-        "twig/twig": "2.0",
+        "twig/twig": "^2.0",
         "doctrine/annotations": "^1.6",
         "symfony/dotenv": "^4.3",
-        "icanboogie/inflector": "^1.5"
+        "icanboogie/inflector": "^1.5",
+        "morris/lessql": "^0.4.1",
+        "illuminate/support": "^5.8",
+        "symfony/var-dumper": "^4.3",
+        "ramsey/uuid": "^3.8",
+        "ad7six/dsn": "^0.4.0",
+        "ext-openssl": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.2"
