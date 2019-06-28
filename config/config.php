@@ -1,18 +1,17 @@
 <?php
 
-namespace Blog;
-
-use Symfony\Yaml;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-use function DI\add;
-use function DI\autowire;
+use Blog\Environment;
+
 use function DI\create;
 use function DI\factory;
 use function DI\get;
 
-$diConfig = [
+return [
+    'app.name' => 'Foobar',
     'log.handlers' => [
         get(Monolog\Handler\RotatingFileHandler::class)
     ],
@@ -25,12 +24,12 @@ $diConfig = [
         }
     }),
 
-    'log.filename' => factory(function(ContainerInterface $c) { return APP_ROOT . '/log/' . $_ENV['APP_ENV'] . '.log'; }),
+    'log.fileName' => factory(function(ContainerInterface $c) { return APP_ROOT . '/log/' . $_ENV['APP_ENV'] . '.log'; }),
 
     Monolog\Handler\RotatingFileHandler::class => create()->constructor(get('log.fileName'), 3, get('log.level')),
 
-    // TODO RollbarHandler
-
+    Monolog\Handler\HandlerInterface::class => create()->constructor(get('log.fileName'), 3, get('log.level')),
+    // Psr\Log\LoggerInterface::class => create(Monolog\Logger::class)->constructor(get('app.name'), get(Monolog\Handler\HandlerInterface::class)),
 
     Psr\Log\LoggerInterface::class => factory(function(ContainerInterface $c) {
         $logger = new Monolog\Logger($c->get('app.name'));
@@ -40,15 +39,5 @@ $diConfig = [
         }
 
         return $logger;
-    }),
-
+    })
 ];
-
-$yamlConfig = [];
-
-if(file_exists(__DIR__ . '/config.yml')) {
-    $yamlConfig = Yaml::parseFile(__DIR__ . '/config.yml');
-
-}
-
-return array_merge($yamlConfig, $diConfig);
