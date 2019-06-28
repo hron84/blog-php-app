@@ -1,3 +1,5 @@
 /vendor/
 /config/application.key
 /config/*.enc*
+.phpunit.result.cache  
+.env*  
