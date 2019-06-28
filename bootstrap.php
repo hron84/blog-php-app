@@ -3,6 +3,7 @@
 use DI\ContainerBuilder;
 use Symfony\Component\Dotenv\Dotenv;
 use Psr\Log\LogLevel;
+use Psr\Log\LoggerInterface;
 use Monolog\Logger;
 use Monolog\Handler\ErrorLogHandler;
 
@@ -31,13 +32,17 @@ $container = null;
 try {
     $containerBuilder = new ContainerBuilder();
 
-    $containerBuilder = $containerBuilder->useAutowiring()->useAnnotations();
+    $containerBuilder = $containerBuilder->useAutowiring(true)->useAnnotations(true);
 
     if('development' !== $_ENV['APP_ENV']) {
-        $containerBuilder = $containerBuilder->ignorePhpDocErrors();
+        $containerBuilder = $containerBuilder->ignorePhpDocErrors(true);
     }
 
+    $containerBuilder->addDefinitions(APP_ROOT . '/src/yamlconfig.php');
+    
+
     // Base config - everything goes here!
+    fputs(STDERR, 'DEBUG: reading config.php' . PHP_EOL);
     if(file_exists(APP_ROOT . '/config/config.php')) {
         $containerBuilder->addDefinitions(APP_ROOT . '/config/config.php');
     }
@@ -53,7 +58,6 @@ try {
         $containerBuilder->addDefinitions(APP_ROOT . '/config/config.local.php');
     }
 
-
     $container = $containerBuilder->build();
 
     if($container->has('session.handler')) {
@@ -68,9 +72,6 @@ try {
         }
     }
     
-    /**
-     * @var Psr\Log\LoggerInterface
-     */
     $logger = $container->get(Psr\Log\LoggerInterface::class);
 
     Monolog\ErrorHandler::register($logger);
